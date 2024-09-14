@@ -19,9 +19,12 @@ FUTaskComponent class >> from: aComponent [
 { #category : #'as yet unclassified' }
 FUTaskComponent >> buildComponent [
 	| taskObject |
-	self task className1 ifNil: [ ^ nil ].
-	taskObject := (NewWaveMagritteContainerCreator dataObject: self task) createEntity.
-	^ taskObject asComponent.
+	self task isEmpty ifTrue: [ ^ nil ]. "Handle empty collection"
+	self task do: [ :eachTask |
+		eachTask className1 ifNil: [ ^ nil ]. "Check className1 for each task"
+		taskObject := (NewWaveMagritteContainerCreator dataObject: eachTask) createEntity.
+		^ taskObject asComponent.
+	].
 
 ]
 
@@ -138,4 +141,10 @@ FUTaskComponent >> task [
 { #category : #accessing }
 FUTaskComponent >> task: anObject [
 	task := anObject
+]
+
+{ #category : #accessing }
+FUTaskComponent >> tasks: aTaskList [
+	task := aTaskList.
+
 ]
